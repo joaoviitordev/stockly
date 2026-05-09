@@ -8,7 +8,7 @@ export default function Home() {
       <p className="text-muted-foreground mt-2 w-90 text-center">
         Gerencie suas vendas, produtos e estoques de forma simples e eficiente.
       </p>
-      <Button className="w-30 h-10 rounded-2xl hover:bg-gray-100 hover:text-black transition-all">
+      <Button className="w-30 h-10 rounded-2xl hover:bg-gray-100 hover:border-2 hover:border-black hover:text-black cursor-pointer transition-all">
         <Link href="/dashboard">Entrar</Link>
       </Button>
     </div>
