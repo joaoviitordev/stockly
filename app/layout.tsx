@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "Stockly - Seu gerenciador de vendas",
   description: "Controle suas vendas e estoques de forma simples e eficiente.",
   icons: {
-    icon: "/favicon/myfavicon.svg"
+    icon: "/favicon/myfavicon.svg",
   },
 };
 
@@ -23,10 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="pt-br"
-      className={`${inter.className} h-full antialiased`}
-    >
+    <html lang="pt-br" className={`${inter.className} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
