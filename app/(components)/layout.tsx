@@ -1,5 +1,6 @@
 "use client";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import {
   CircleDollarSignIcon,
   LayoutGridIcon,
@@ -7,7 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from "../_components/ui/button";
 import Link from "next/link";
-import { usePathname } from 'next/navigation'
+import { usePathname } from "next/navigation";
 
 export default function SidebarLayout({
   children,
@@ -18,10 +19,10 @@ export default function SidebarLayout({
   return (
     <div className="flex">
       <div className="h-screen w-52 px-6 py-4 flex flex-col gap-4 bg-gray-100 items-center justify-start">
-        <h1 className="font-extrabold text-3xl">STOCKLY</h1>
+        <h1 className="font-black text-3xl">STOCKLY</h1>
         <div className="flex flex-col gap-2 w-full">
           <Button
-            variant={pathname === '/dashboard' ? 'default' : 'ghost'}
+            variant={pathname === "/dashboard" ? "default" : "ghost"}
             className="flex items-center justify-start"
             nativeButton={false}
             render={
@@ -32,7 +33,7 @@ export default function SidebarLayout({
             Dashboard
           </Button>
           <Button
-            variant={pathname === '/products' ? 'default' : 'ghost'}
+            variant={pathname === "/products" ? "default" : "ghost"}
             className="flex items-center justify-start"
             nativeButton={false}
             render={
@@ -43,7 +44,7 @@ export default function SidebarLayout({
             Produtos
           </Button>
           <Button
-            variant={pathname === '/sales' ? 'default' : 'ghost'}
+            variant={pathname === "/sales" ? "default" : "ghost"}
             className="flex items-center justify-start"
             nativeButton={false}
             render={<Link href="/sales" className="flex items-center gap-2" />}
@@ -51,6 +52,14 @@ export default function SidebarLayout({
             <CircleDollarSignIcon />
             Vendas
           </Button>
+        </div>
+        <div className="w-full h-full flex flex-1 items-end justify-center pb-4 gap-2">
+          <Link href="https://github.com/joaoviitordev" target="_blank">
+            <FontAwesomeIcon icon={faGithub} className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out" size="2x" />
+          </Link>
+          <Link href="https://www.linkedin.com/in/joaoviitordev" target="_blank">
+            <FontAwesomeIcon icon={faLinkedin} className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out" size="2x" />
+          </Link>
         </div>
       </div>
       {children}
