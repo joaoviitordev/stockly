@@ -1,11 +1,11 @@
+import { PlusIcon } from "lucide-react";
 import { Button } from "@/app/_components/ui/button";
 import { DataTable } from "@/app/_components/ui/data-table";
-import { db } from "@/app/_lib/prisma";
-import { PlusIcon } from "lucide-react";
+import { getProducts } from "@/app/_data-access/product/get-products";
 import { productTableColumns } from "./_components/table-columns";
 
 const ProductsPage = async () => {
-  const products = await db.product.findMany();
+  const products = await getProducts();
   
   const formattedProducts = products.map((product) => ({
     ...product,
