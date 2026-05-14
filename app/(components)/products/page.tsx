@@ -1,13 +1,13 @@
 import { PlusIcon } from "lucide-react";
 import { Button } from "@/app/_components/ui/button";
 import { DataTable } from "@/app/_components/ui/data-table";
-import { getProducts } from "@/app/_data-access/product/get-products";
 import { productTableColumns } from "./_components/table-columns";
+import { getProducts } from "@/app/_data-access/product/get-products";
 
 const ProductsPage = async () => {
   const products = await getProducts();
   
-  const formattedProducts = products.map((product) => ({
+  const formattedProducts = products.map((product: any) => ({
     ...product,
     price: Number(product.price),
     status: product.stock > 0 ? `Em estoque` : "Esgotado",
