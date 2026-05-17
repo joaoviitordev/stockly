@@ -19,7 +19,7 @@ export default function SidebarLayout({
   return (
     <div className="flex">
       <div className="h-screen w-52 px-6 py-4 flex flex-col gap-4 bg-gray-100 items-center justify-start">
-        <h1 className="font-black text-3xl">STOCKLY</h1>
+        <Link href="/" className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out w-full flex justify-center"><h1 className="font-black text-3xl">STOCKLY</h1></Link>
         <div className="flex flex-col gap-2 w-full">
           <Button
             variant={pathname === "/dashboard" ? "default" : "ghost"}
