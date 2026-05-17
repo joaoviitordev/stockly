@@ -24,7 +24,7 @@ const ProductsPage = async () => {
         </div>
         <Button className="cursor-pointer">
           <PlusIcon />
-          Adicionar produto 
+          Adicionar produto
         </Button>
       </div>
       <DataTable columns={productTableColumns} data={formattedProducts} />

@@ -1,9 +1,21 @@
-import { Button } from "@/app/_components/ui/button";
-import { PlusIcon } from "lucide-react";
+import { DataTable } from "@/app/_components/ui/data-table";
+import { salesTableColumns } from "./_components/table-columns";
+import { getSales } from "@/app/_data-access/sale/get-sales";
+import { getProducts } from "@/app/_data-access/product/get-products";
+import { CreateSaleSheet } from "./_components/create-sale-sheet";
 
-export default function SalesPage() {
-    return (
-        <div className="w-full space-y-8 p-8">
+export default async function SalesPage() {
+  const [sales, products] = await Promise.all([getSales(), getProducts()]);
+
+  const productOptions = products.map((product) => ({
+    id: product.id,
+    name: product.name,
+    price: Number(product.price),
+    stock: product.stock,
+  }));
+
+  return (
+    <div className="w-full space-y-8 p-8">
       <div className="w-full flex items-center justify-between">
         <div className="space-y-1">
           <span className="text-sm text-gray-500 font-semibold">
@@ -11,11 +23,9 @@ export default function SalesPage() {
           </span>
           <h2 className="text-2xl font-semibold">Vendas</h2>
         </div>
-        <Button className="cursor-pointer">
-          <PlusIcon />
-          Nova venda
-        </Button>
+        <CreateSaleSheet products={productOptions} />
       </div>
+      <DataTable columns={salesTableColumns} data={sales} />
     </div>
-    );
+  );
 }
