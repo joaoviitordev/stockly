@@ -3,14 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/app/_components/ui/sheet";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/app/_components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -69,17 +69,15 @@ export function CreateSaleSheet({ products }: CreateSaleSheetProps) {
       router.refresh();
     } catch (error) {
       console.error("Erro ao criar venda:", error);
-      alert(
-        error instanceof Error ? error.message : "Erro ao criar venda."
-      );
+      alert(error instanceof Error ? error.message : "Erro ao criar venda.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger
         render={
           <Button className="cursor-pointer">
             <PlusIcon />
@@ -87,13 +85,13 @@ export function CreateSaleSheet({ products }: CreateSaleSheetProps) {
           </Button>
         }
       />
-      <SheetContent side="right">
-        <SheetHeader>
-          <SheetTitle>Nova venda</SheetTitle>
-          <SheetDescription>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Nova venda</DialogTitle>
+          <DialogDescription>
             Selecione o produto e a quantidade para registrar uma nova venda.
-          </SheetDescription>
-        </SheetHeader>
+          </DialogDescription>
+        </DialogHeader>
 
         <div className="flex flex-col gap-4 px-4">
           {/* Seleção do produto */}
@@ -160,7 +158,7 @@ export function CreateSaleSheet({ products }: CreateSaleSheetProps) {
           )}
         </div>
 
-        <SheetFooter>
+        <DialogFooter>
           <Button
             className="w-full cursor-pointer"
             onClick={handleSubmit}
@@ -175,12 +173,11 @@ export function CreateSaleSheet({ products }: CreateSaleSheetProps) {
               "Confirmar venda"
             )}
           </Button>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
-
 
 /* 
   - Componente client-side com Sheet (painel lateral)
@@ -188,4 +185,4 @@ export function CreateSaleSheet({ products }: CreateSaleSheetProps) {
   - Input de quantidade com limite baseado no estoque
   - Resumo com preço unitário, quantidade e total formatados em R$
   - Loading state no botão de submit
-*/  
+*/

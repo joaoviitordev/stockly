@@ -2,7 +2,7 @@ import { DataTable } from "@/app/_components/ui/data-table";
 import { salesTableColumns } from "./_components/table-columns";
 import { getSales } from "@/app/_data-access/sale/get-sales";
 import { getProducts } from "@/app/_data-access/product/get-products";
-import { CreateSaleSheet } from "./_components/create-sale-sheet";
+import { CreateSaleSheet } from "./_components/create-sale-dialog";
 
 export default async function SalesPage() {
   const [sales, products] = await Promise.all([getSales(), getProducts()]);
