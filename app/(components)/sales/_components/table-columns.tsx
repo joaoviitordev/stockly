@@ -1,16 +1,27 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import SaleTableActions from "./sale-table-actions";
 
 export type SaleDto = {
   id: string;
+  productId: string;
   productNames: string;
   totalQuantity: number;
   totalPrice: number;
   date: Date;
 };
 
-export const salesTableColumns: ColumnDef<SaleDto>[] = [
+interface ProductOption {
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+}
+
+export const createSalesTableColumns = (
+  products: ProductOption[]
+): ColumnDef<SaleDto>[] => [
   {
     accessorKey: "productNames",
     header: "Produtos",
@@ -38,6 +49,13 @@ export const salesTableColumns: ColumnDef<SaleDto>[] = [
         month: "2-digit",
         year: "numeric",
       }).format(new Date(row.original.date));
+    },
+  },
+  {
+    id: "actions",
+    header: "Ações",
+    cell: ({ row }) => {
+      return <SaleTableActions sale={row.original} products={products} />;
     },
   },
 ];
