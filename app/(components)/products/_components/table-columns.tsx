@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/app/_components/ui/badge";
+import ProductTableActions from "./product-table-actions";
 
 // Prisma's Decimal type is not supported by React Server Components serialization.
 // So we define a type that expects the price to be a number (after mapping).
@@ -44,6 +45,13 @@ export const productTableColumns: ColumnDef<ProductDto>[] = [
           {status}
         </Badge>
       );
+    },
+  },
+  {
+    id: "actions",
+    header: "Ações",
+    cell: ({ row }) => {
+      return <ProductTableActions product={row.original} />;
     },
   },
 ];
