@@ -1,6 +1,5 @@
 import { db } from "@/app/_lib/prisma";
-import { Product } from "@prisma/client";
 
-export const getProducts = async (): Promise<Product[]> => {
+export const getProducts = async () => {
   return db.product.findMany();
 };
