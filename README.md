@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📊 Stockly
 
-## Getting Started
+<p align="center">
+  <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow" />
+  <img src="https://img.shields.io/badge/foco-estudo-blue" />
+  <img src="https://img.shields.io/badge/feito%20com-Next.js-black" />
+  <img src="https://img.shields.io/badge/database-Neon%20DB-00e599" />
+  <img src="https://img.shields.io/badge/ORM-Prisma-blueviolet" />
+  <img src="https://img.shields.io/badge/design-Figma-F24E1E" />
+</p>
 
-First, run the development server:
+Aplicação web desenvolvida com o objetivo de gerenciar o **controle de estoque e vendas de produtos**, permitindo registrar produtos, gerenciar níveis de estoque e acompanhar o histórico de transações de forma simples e intuitiva.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+> ⚠️ Este projeto foi desenvolvido com foco em estudos, servindo como laboratório prático para a construção de uma **aplicação full stack completa (frontend + backend + banco de dados)**.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🔗 Link do projeto
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Deploy da aplicação:** [Stockly no Vercel](https://stockly-seven-nu.vercel.app/)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Sobre o projeto
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+O **Stockly** é uma aplicação focada no controle interno de estoque e vendas, permitindo:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Dashboard interativo:** Acompanhamento de métricas importantes de faturamento, vendas e produtos com gráficos dinâmicos.
+- **Gerenciamento de Produtos:** Cadastro, edição e exclusão de itens com controle de preço unitário e quantidade em estoque.
+- **Registro de Vendas:** Lançamento de transações com controle de quantidade e preço unitário, com atualização do estoque.
+- **Tabelas de dados interativas:** Listagem completa de produtos e vendas com paginação, busca e ordenação dos dados.
 
-## Deploy on Vercel
+Além disso, o projeto conta com uma **Landing Page** simples para:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Apresentar o sistema e sua proposta.
+- Direcionar o usuário para o dashboard principal de controle através do botão de início.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🛠️ Tecnologias utilizadas
+
+### 🎨 Frontend
+- Next.js (App Router)
+- React
+- TypeScript
+- Tailwind CSS
+- Recharts (para renderização de gráficos de receita)
+- Radix UI / Shadcn UI (componentes de interface acessíveis)
+- FontAwesome (ícones da interface)
+
+### ⚙️ Backend
+- Node.js
+- Server Actions (Next.js) para manipulação de banco de dados diretamente no servidor
+
+### 🗄️ Banco de dados
+- PostgreSQL (hospedado na nuvem via **Neon DB**)
+- **Prisma ORM**
+
+### 🎨 Design & Protótipo
+- **Figma** (concepção e UI design do projeto)
+
+### 🧩 Outros
+- Git & GitHub
+- Arquitetura de componentes modularizada
+- Integração full stack
+
+---
+
+## 🧠 Contexto de aprendizado
+
+Este projeto foi construído como parte de um processo intensivo de estudos de desenvolvimento web moderno.
+
+- O foco principal foi o aprendizado e consolidação do Next.js (com Server Actions).
+- Serviu para entender o fluxo de dados em uma arquitetura full stack sem a necessidade de APIs REST intermediárias.
+- Prática direta com a estruturação de banco de dados relacional e controle de estoque consistente.
+
+> Esse projeto foi essencial para entender, na prática, como o ecossistema do Next.js e Prisma se integram para entregar uma solução completa e ágil.
+
+---
+
+## 📚 Principais aprendizados
+
+- Estruturação de projetos modernos com Next.js App Router.
+- Integração e modelagem de banco de dados relacionais com Prisma.
+- Criação e manuseio de Server Actions para mutações seguras no banco.
+- Construção de tabelas de dados dinâmicas utilizando `@tanstack/react-table`.
+- Criação de dashboards visuais e dinâmicos com gráficos responsivos (Recharts).
+
+---
+
+## 📌 Considerações finais
+
+Esse projeto representa um passo importante na minha trajetória de aprendizado full stack.
+
+Mesmo sendo uma aplicação com foco em estudos, foi fundamental para:
+
+- Sair da teoria e enfrentar desafios reais de sincronização de estoque e banco de dados.
+- Entender na prática a integração entre componentes de UI dinâmicos (diálogos, tabelas) e lógica de servidor.
+- Evoluir nas boas práticas com TypeScript e Tailwind CSS.
+
+---
+
+## 📬 Contato
+
+Caso queira conversar, dar feedback ou oportunidades:
+
+- **GitHub:** https://github.com/joaoviitordev  
+- **LinkedIn:** https://www.linkedin.com/in/joaovitor-faria/  
+- **Email:** joaovitorgomesdefaria@gmail.com
