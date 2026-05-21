@@ -2,8 +2,8 @@ import { db } from "@/app/_lib/prisma";
 
 export const getTotalRevenue = async (): Promise<number> => {
   const saleProducts = await db.saleProduct.findMany();
-  return saleProducts.reduce<number>(
-    (sum, sp) => sum + Number(sp.unitPrice) * sp.quantity,
+  return saleProducts.reduce(
+    (sum: number, sp) => sum + Number(sp.unitPrice) * sp.quantity,
     0
   );
 };
@@ -27,11 +27,11 @@ export const getTodayRevenue = async (): Promise<number> => {
     },
   });
 
-  return sales.reduce<number>(
-    (sum, sale) =>
+  return sales.reduce(
+    (sum: number, sale) =>
       sum +
-      sale.products.reduce<number>(
-        (s, sp) => s + Number(sp.unitPrice) * sp.quantity,
+      sale.products.reduce(
+        (s: number, sp) => s + Number(sp.unitPrice) * sp.quantity,
         0
       ),
     0
@@ -68,8 +68,8 @@ export const getMostSoldProducts = async (): Promise<MostSoldProductDto[]> => {
   });
 
   // Agrupa por productId
-  const grouped = saleProducts.reduce<Record<string, MostSoldProductDto>>(
-    (acc, sp) => {
+  const grouped = saleProducts.reduce(
+    (acc: Record<string, MostSoldProductDto>, sp) => {
       if (!acc[sp.productId]) {
         acc[sp.productId] = {
           productId: sp.productId,
@@ -133,8 +133,8 @@ export const getRevenueByMonth = async (): Promise<MonthlyRevenueDto[]> => {
     const saleDate = new Date(sale.date);
     const key = `${monthNames[saleDate.getMonth()]}/${saleDate.getFullYear()}`;
     if (key in months) {
-      months[key] += sale.products.reduce<number>(
-        (sum, sp) => sum + Number(sp.unitPrice) * sp.quantity,
+      months[key] += sale.products.reduce(
+        (sum: number, sp) => sum + Number(sp.unitPrice) * sp.quantity,
         0
       );
     }
