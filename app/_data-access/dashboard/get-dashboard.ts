@@ -1,13 +1,40 @@
 import { db } from "@/app/_lib/prisma";
-import type { SaleProduct, Sale, Product } from "@prisma/client";
 
-type SaleWithProducts = Sale & { products: SaleProduct[] };
-type SaleProductWithProduct = SaleProduct & { product: Product };
+interface SaleProductRecord {
+  id: string;
+  saleId: string;
+  productId: string;
+  unitPrice: unknown;
+  quantity: number;
+  createAt: Date;
+  updateAt: Date;
+}
+
+interface ProductRecord {
+  id: string;
+  name: string;
+  price: unknown;
+  stock: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface SaleWithProducts {
+  id: string;
+  date: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  products: SaleProductRecord[];
+}
+
+interface SaleProductWithProduct extends SaleProductRecord {
+  product: ProductRecord;
+}
 
 export const getTotalRevenue = async (): Promise<number> => {
-  const saleProducts: SaleProduct[] = await db.saleProduct.findMany();
+  const saleProducts: SaleProductRecord[] = await db.saleProduct.findMany();
   return saleProducts.reduce(
-    (sum: number, sp: SaleProduct) => sum + Number(sp.unitPrice) * sp.quantity,
+    (sum: number, sp: SaleProductRecord) => sum + Number(sp.unitPrice) * sp.quantity,
     0
   );
 };
@@ -35,7 +62,7 @@ export const getTodayRevenue = async (): Promise<number> => {
     (sum: number, sale: SaleWithProducts) =>
       sum +
       sale.products.reduce(
-        (s: number, sp: SaleProduct) => s + Number(sp.unitPrice) * sp.quantity,
+        (s: number, sp: SaleProductRecord) => s + Number(sp.unitPrice) * sp.quantity,
         0
       ),
     0
@@ -138,7 +165,7 @@ export const getRevenueByMonth = async (): Promise<MonthlyRevenueDto[]> => {
     const key = `${monthNames[saleDate.getMonth()]}/${saleDate.getFullYear()}`;
     if (key in months) {
       months[key] += sale.products.reduce(
-        (sum: number, sp: SaleProduct) => sum + Number(sp.unitPrice) * sp.quantity,
+        (sum: number, sp: SaleProductRecord) => sum + Number(sp.unitPrice) * sp.quantity,
         0
       );
     }
