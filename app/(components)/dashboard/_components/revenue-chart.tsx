@@ -35,6 +35,12 @@ export function RevenueChart({ data }: RevenueChartProps) {
               />
               <Tooltip 
                 cursor={{ fill: "transparent" }}
+                contentStyle={{
+                  backgroundColor: "var(--background)",
+                  borderColor: "var(--border)",
+                  color: "var(--foreground)",
+                  borderRadius: "0.5rem",
+                }}
                 formatter={(value) => 
                   new Intl.NumberFormat("pt-BR", {
                     style: "currency",
@@ -44,6 +50,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
               />
               <Bar 
                 dataKey="revenue" 
+                name="Receita total"
                 fill="currentColor" 
                 radius={[4, 4, 0, 0]} 
                 className="fill-primary"

@@ -52,7 +52,7 @@ export default async function Dashboard() {
     <div className="w-full p-8 space-y-8 flex flex-col h-full">
       <div className="w-full flex items-center justify-between">
         <div className="space-y-1">
-          <span className="text-sm text-gray-500 font-semibold">
+          <span className="text-sm text-muted-foreground font-semibold">
             Informações gerais
           </span>
           <h2 className="text-2xl font-semibold">Dashboard</h2>

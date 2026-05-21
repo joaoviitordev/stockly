@@ -16,7 +16,7 @@ const ProductsPage = async () => {
     <div className="w-full space-y-8 p-8">
       <div className="w-full flex items-center justify-between">
         <div className="space-y-1">
-          <span className="text-sm text-gray-500 font-semibold">
+          <span className="text-sm text-muted-foreground font-semibold">
             Gerencie seus produtos
           </span>
           <h2 className="text-2xl font-semibold">Produtos</h2>
