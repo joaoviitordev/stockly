@@ -6,14 +6,14 @@ import CreateProductDialog from "./_components/create-product-dialog";
 const ProductsPage = async () => {
   const products = await getProducts();
   
-  const formattedProducts = products.map((product: any) => ({
+  const formattedProducts = products.map((product) => ({
     ...product,
     price: Number(product.price),
     status: product.stock > 0 ? `Em estoque` : "Esgotado",
   }));
 
   return (
-    <div className="w-full space-y-4 p-4">
+    <div className="w-full space-y-8 p-8">
       <div className="w-full flex items-center justify-between">
         <div className="space-y-1">
           <span className="text-sm text-gray-500 font-semibold">

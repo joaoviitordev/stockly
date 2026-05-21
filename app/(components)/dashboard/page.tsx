@@ -3,6 +3,7 @@ import {
   CalendarIcon,
   ShoppingCartIcon,
   TrophyIcon,
+  LucidePackage,
 } from "lucide-react";
 import {
   Card,
@@ -48,7 +49,7 @@ export default async function Dashboard() {
     }).format(value);
 
   return (
-    <div className="w-full p-4 flex flex-col gap-4 h-full">
+    <div className="w-full p-8 space-y-8 flex flex-col h-full">
       <div className="w-full flex items-center justify-between">
         <div className="space-y-1">
           <span className="text-sm text-gray-500 font-semibold">
@@ -121,7 +122,7 @@ export default async function Dashboard() {
                   <CardTitle className="text-lg font-medium">
                     Estoque total
                   </CardTitle>
-                  <ShoppingCartIcon className="size-5 text-muted-foreground" />
+                  <LucidePackage className="size-5 text-muted-foreground" />
                 </div>
                 <CardDescription>
                   Quantidade de produtos em estoque
