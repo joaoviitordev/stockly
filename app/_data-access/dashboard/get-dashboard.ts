@@ -1,9 +1,13 @@
 import { db } from "@/app/_lib/prisma";
+import type { SaleProduct, Sale, Product } from "@prisma/client";
+
+type SaleWithProducts = Sale & { products: SaleProduct[] };
+type SaleProductWithProduct = SaleProduct & { product: Product };
 
 export const getTotalRevenue = async (): Promise<number> => {
-  const saleProducts = await db.saleProduct.findMany();
+  const saleProducts: SaleProduct[] = await db.saleProduct.findMany();
   return saleProducts.reduce(
-    (sum: number, sp) => sum + Number(sp.unitPrice) * sp.quantity,
+    (sum: number, sp: SaleProduct) => sum + Number(sp.unitPrice) * sp.quantity,
     0
   );
 };
@@ -15,7 +19,7 @@ export const getTodayRevenue = async (): Promise<number> => {
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const sales = await db.sale.findMany({
+  const sales: SaleWithProducts[] = await db.sale.findMany({
     where: {
       date: {
         gte: today,
@@ -28,10 +32,10 @@ export const getTodayRevenue = async (): Promise<number> => {
   });
 
   return sales.reduce(
-    (sum: number, sale) =>
+    (sum: number, sale: SaleWithProducts) =>
       sum +
       sale.products.reduce(
-        (s: number, sp) => s + Number(sp.unitPrice) * sp.quantity,
+        (s: number, sp: SaleProduct) => s + Number(sp.unitPrice) * sp.quantity,
         0
       ),
     0
@@ -61,7 +65,7 @@ export interface MostSoldProductDto {
 }
 
 export const getMostSoldProducts = async (): Promise<MostSoldProductDto[]> => {
-  const saleProducts = await db.saleProduct.findMany({
+  const saleProducts: SaleProductWithProduct[] = await db.saleProduct.findMany({
     include: {
       product: true,
     },
@@ -69,7 +73,7 @@ export const getMostSoldProducts = async (): Promise<MostSoldProductDto[]> => {
 
   // Agrupa por productId
   const grouped = saleProducts.reduce(
-    (acc: Record<string, MostSoldProductDto>, sp) => {
+    (acc: Record<string, MostSoldProductDto>, sp: SaleProductWithProduct) => {
       if (!acc[sp.productId]) {
         acc[sp.productId] = {
           productId: sp.productId,
@@ -100,7 +104,7 @@ export const getRevenueByMonth = async (): Promise<MonthlyRevenueDto[]> => {
   const now = new Date();
   const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
 
-  const sales = await db.sale.findMany({
+  const sales: SaleWithProducts[] = await db.sale.findMany({
     where: {
       date: {
         gte: sixMonthsAgo,
@@ -134,7 +138,7 @@ export const getRevenueByMonth = async (): Promise<MonthlyRevenueDto[]> => {
     const key = `${monthNames[saleDate.getMonth()]}/${saleDate.getFullYear()}`;
     if (key in months) {
       months[key] += sale.products.reduce(
-        (sum: number, sp) => sum + Number(sp.unitPrice) * sp.quantity,
+        (sum: number, sp: SaleProduct) => sum + Number(sp.unitPrice) * sp.quantity,
         0
       );
     }
