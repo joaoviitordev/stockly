@@ -125,9 +125,11 @@ export default function SidebarLayout({
           <div className="flex flex-col gap-2">
             {renderNavLinks(() => setMobileOpen(false))}
           </div>
-          <div className="flex flex-1 flex-col items-center justify-end pb-4 gap-4">
-            {themeToggle}
-            {socialLinks}
+          <div className="flex flex-1 items-end justify-center pb-4">
+            <div className="flex items-center gap-4">
+              {themeToggle}
+              {socialLinks}
+            </div>
           </div>
         </SheetContent>
       </Sheet>
@@ -142,9 +144,11 @@ export default function SidebarLayout({
         <div className="flex flex-col gap-2 w-full">
           {renderNavLinks()}
         </div>
-        <div className="w-full h-full flex flex-1 flex-col items-center justify-end pb-4 gap-4">
-          {themeToggle}
-          {socialLinks}
+        <div className="w-full h-full flex flex-1 items-end justify-center pb-4">
+          <div className="flex items-center gap-4">
+            {themeToggle}
+            {socialLinks}
+          </div>
         </div>
       </div>
 
