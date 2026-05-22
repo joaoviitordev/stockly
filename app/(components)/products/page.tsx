@@ -13,13 +13,13 @@ const ProductsPage = async () => {
   }));
 
   return (
-    <div className="w-full space-y-8 p-8">
-      <div className="w-full flex items-center justify-between">
+    <div className="w-full space-y-6 sm:space-y-8 p-4 sm:p-6 lg:p-8">
+      <div className="w-full flex flex-wrap items-center justify-between gap-4">
         <div className="space-y-1">
           <span className="text-sm text-muted-foreground font-semibold">
             Gerencie seus produtos
           </span>
-          <h2 className="text-2xl font-semibold">Produtos</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold">Produtos</h2>
         </div>
         <CreateProductDialog />
       </div>

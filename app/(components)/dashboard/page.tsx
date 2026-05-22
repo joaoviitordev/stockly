@@ -49,13 +49,13 @@ export default async function Dashboard() {
     }).format(value);
 
   return (
-    <div className="w-full p-8 space-y-8 flex flex-col h-full">
+    <div className="w-full p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 flex flex-col h-full">
       <div className="w-full flex items-center justify-between">
         <div className="space-y-1">
           <span className="text-sm text-muted-foreground font-semibold">
             Informações gerais
           </span>
-          <h2 className="text-2xl font-semibold">Dashboard</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold">Dashboard</h2>
         </div>
       </div>
 
@@ -100,7 +100,7 @@ export default async function Dashboard() {
           </div>
 
           {/* Vendas, Estoque e Produtos Totais lado a lado */}
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-2 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             <Card>
               <CardHeader>
                 <div className="flex flex-row items-center gap-2">

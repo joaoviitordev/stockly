@@ -22,7 +22,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
         <CardDescription>Receita total dos últimos 6 meses</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 min-h-[150px]">
-        <div className="h-[250px] w-full">
+        <div className="h-[180px] sm:h-[250px] w-full">
           <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0} initialDimension={{ width: 320, height: 180 }}>
             <BarChart data={data}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />

@@ -14,13 +14,13 @@ export default async function SalesPage() {
   }));
 
   return (
-    <div className="w-full space-y-8 p-8">
-      <div className="w-full flex items-center justify-between">
+    <div className="w-full space-y-6 sm:space-y-8 p-4 sm:p-6 lg:p-8">
+      <div className="w-full flex flex-wrap items-center justify-between gap-4">
         <div className="space-y-1">
           <span className="text-sm text-muted-foreground font-semibold">
             Histórico de vendas
           </span>
-          <h2 className="text-2xl font-semibold">Vendas</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold">Vendas</h2>
         </div>
         <CreateSaleSheet products={productOptions} />
       </div>

@@ -6,8 +6,8 @@ import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 export default function Home() {
   return (
     <div className="flex flex-col gap-4 items-center justify-center w-full h-screen">
-      <h1 className="text-5xl font-black">STOCKLY</h1>
-      <p className="text-muted-foreground w-90 text-center font-semibold">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-black">STOCKLY</h1>
+      <p className="text-muted-foreground w-full max-w-sm sm:max-w-md px-4 text-center font-semibold">
         Gerencie suas vendas, produtos e estoques de forma simples e eficiente.
       </p>
       <Link href="/dashboard">
@@ -19,15 +19,13 @@ export default function Home() {
         <Link href="https://github.com/joaoviitordev" target="_blank">
           <FontAwesomeIcon
             icon={faGithub}
-            className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out w-8 h-8"
-            size="xl"
+            className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out w-6 h-6 sm:w-8 sm:h-8"
           />
         </Link>
         <Link href="https://www.linkedin.com/in/joaoviitordev" target="_blank">
           <FontAwesomeIcon
             icon={faLinkedin}
-            className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out w-8 h-8"
-            size="xl"
+            className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out w-6 h-6 sm:w-8 sm:h-8"
           />
         </Link>
       </div>
