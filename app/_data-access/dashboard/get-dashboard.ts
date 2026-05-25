@@ -176,3 +176,28 @@ export const getRevenueByMonth = async (): Promise<MonthlyRevenueDto[]> => {
     revenue,
   }));
 };
+
+export interface LowStockProductDto {
+  id: string;
+  name: string;
+  stock: number;
+  minStock: number;
+}
+
+export const getLowStockProducts = async (): Promise<LowStockProductDto[]> => {
+  const products = await db.product.findMany({
+    where: {
+      stock: { gt: 0 },
+    },
+    select: {
+      id: true,
+      name: true,
+      stock: true,
+      minStock: true,
+    },
+    orderBy: { stock: "asc" },
+  });
+
+  // Filtra no JS pois o Prisma não suporta comparar colunas entre si diretamente
+  return products.filter((p) => p.stock <= p.minStock);
+};

@@ -25,6 +25,7 @@ export default function CreateProductDialog() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState<number>(0);
   const [stock, setStock] = useState<number>(0);
+  const [minStock, setMinStock] = useState<number>(5);
 
   /* Estado de loading durante o submit */
   const [isLoading, setIsLoading] = useState(false);
@@ -32,13 +33,14 @@ export default function CreateProductDialog() {
   const router = useRouter();
 
   /* Validação: desabilita o botão se campos obrigatórios estiverem vazios ou inválidos */
-  const isFormValid = name.trim().length > 0 && price > 0 && stock >= 0;
+  const isFormValid = name.trim().length > 0 && price > 0 && stock >= 0 && minStock >= 1;
 
   /* Reseta os campos do formulário para o estado inicial */
   const resetForm = () => {
     setName("");
     setPrice(0);
     setStock(0);
+    setMinStock(5);
   };
 
   /* Handler de submit — chama a server action e trata erros */
@@ -51,6 +53,7 @@ export default function CreateProductDialog() {
         name: name.trim(),
         price,
         stock,
+        minStock,
       });
 
       /* Fecha o dialog e limpa os campos após sucesso */
@@ -130,6 +133,22 @@ export default function CreateProductDialog() {
             />
           </div>
 
+          {/* Estoque mínimo (alerta) */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="product-min-stock">Estoque mínimo</Label>
+            <Input
+              id="product-min-stock"
+              type="number"
+              min={1}
+              placeholder="5"
+              value={minStock || ""}
+              onChange={(e) => setMinStock(parseInt(e.target.value) || 1)}
+            />
+            <span className="text-xs text-muted-foreground">
+              Alerta quando o estoque atingir este valor
+            </span>
+          </div>
+
           {/* Resumo do produto — aparece somente quando o formulário é válido */}
           {isFormValid && (
             <div className="rounded-lg border p-3 space-y-1">
@@ -151,6 +170,10 @@ export default function CreateProductDialog() {
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Estoque</span>
                 <span>{stock} un.</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Estoque mínimo</span>
+                <span>{minStock} un.</span>
               </div>
             </div>
           )}

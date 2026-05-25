@@ -8,6 +8,7 @@ interface EditProductInput {
   name: string;
   price: number;
   stock: number;
+  minStock: number;
 }
 
 export const editProduct = async (input: EditProductInput) => {
@@ -39,6 +40,7 @@ export const editProduct = async (input: EditProductInput) => {
       name: input.name,
       price: input.price,
       stock: input.stock,
+      minStock: input.minStock,
     },
   });
 

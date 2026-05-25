@@ -11,6 +11,7 @@ export type ProductDto = {
   name: string;
   price: number;
   stock: number;
+  minStock: number;
   status: string;
 };
 
@@ -41,13 +42,16 @@ export const productTableColumns: ColumnDef<ProductDto>[] = [
     cell: ({ row }) => {
       const status = row.original.status;
       const isOutOfStock = status === "Esgotado";
+      const isLowStock = status === "Estoque baixo";
       return (
         <Badge
           variant={isOutOfStock ? "default" : "secondary"}
           className={
             isOutOfStock
               ? "flex items-center justify-center bg-red-500 text-white"
-              : "flex items-center justify-center text-background bg-primary"
+              : isLowStock
+                ? "flex items-center justify-center bg-yellow-500 text-black"
+                : "flex items-center justify-center text-background bg-primary"
           }
         >
           {status}

@@ -5,6 +5,7 @@ export interface ProductRecord {
   name: string;
   price: unknown;
   stock: number;
+  minStock: number;
   createdAt: Date;
   updatedAt: Date;
 }

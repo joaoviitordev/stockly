@@ -9,7 +9,12 @@ const ProductsPage = async () => {
   const formattedProducts = products.map((product) => ({
     ...product,
     price: Number(product.price),
-    status: product.stock > 0 ? `Em estoque` : "Esgotado",
+    status:
+      product.stock === 0
+        ? "Esgotado"
+        : product.stock <= product.minStock
+          ? "Estoque baixo"
+          : "Em estoque",
   }));
 
   return (

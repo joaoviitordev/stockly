@@ -7,6 +7,7 @@ interface CreateProductInput {
   name: string;
   price: number;
   stock: number;
+  minStock: number;
 }
 
 export const createProduct = async (input: CreateProductInput) => {
@@ -23,6 +24,7 @@ export const createProduct = async (input: CreateProductInput) => {
       name: input.name,
       price: input.price,
       stock: input.stock,
+      minStock: input.minStock,
     },
   });
 

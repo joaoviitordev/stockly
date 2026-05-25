@@ -11,6 +11,7 @@ model Product {
   name      String        @unique
   price     Decimal       @db.Decimal(10, 4)
   stock     Int
+  minStock  Int           @default(5)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   sales     SaleProduct[]

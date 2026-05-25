@@ -55,6 +55,7 @@ export default function ProductTableActions({
   const [editName, setEditName] = useState(product.name);
   const [editPrice, setEditPrice] = useState(product.price);
   const [editStock, setEditStock] = useState(product.stock);
+  const [editMinStock, setEditMinStock] = useState(product.minStock);
   const [isEditing, setIsEditing] = useState(false);
 
   /* --- Estado do alert dialog de exclusão --- */
@@ -62,7 +63,7 @@ export default function ProductTableActions({
   const [isDeleting, setIsDeleting] = useState(false);
 
   const isEditFormValid =
-    editName.trim().length > 0 && editPrice > 0 && editStock >= 0;
+    editName.trim().length > 0 && editPrice > 0 && editStock >= 0 && editMinStock >= 1;
 
   /* Copiar ID do produto para a área de transferência */
   const handleCopyId = async () => {
@@ -74,6 +75,7 @@ export default function ProductTableActions({
     setEditName(product.name);
     setEditPrice(product.price);
     setEditStock(product.stock);
+    setEditMinStock(product.minStock);
     setEditOpen(true);
   };
 
@@ -88,6 +90,7 @@ export default function ProductTableActions({
         name: editName.trim(),
         price: editPrice,
         stock: editStock,
+        minStock: editMinStock,
       });
       setEditOpen(false);
       router.refresh();
@@ -213,6 +216,24 @@ export default function ProductTableActions({
               />
             </div>
 
+            {/* Estoque mínimo */}
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="edit-product-min-stock">Estoque mínimo</Label>
+              <Input
+                id="edit-product-min-stock"
+                type="number"
+                min={1}
+                placeholder="5"
+                value={editMinStock || ""}
+                onChange={(e) =>
+                  setEditMinStock(parseInt(e.target.value) || 1)
+                }
+              />
+              <span className="text-xs text-muted-foreground">
+                Alerta quando o estoque atingir este valor
+              </span>
+            </div>
+
             {/* Resumo das alterações */}
             {isEditFormValid && (
               <div className="rounded-lg border p-3 space-y-1">
@@ -234,6 +255,10 @@ export default function ProductTableActions({
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Estoque</span>
                   <span>{editStock} un.</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Estoque mínimo</span>
+                  <span>{editMinStock} un.</span>
                 </div>
               </div>
             )}

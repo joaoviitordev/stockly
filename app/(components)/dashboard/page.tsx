@@ -4,6 +4,7 @@ import {
   ShoppingCartIcon,
   TrophyIcon,
   LucidePackage,
+  AlertTriangleIcon,
 } from "lucide-react";
 import {
   Card,
@@ -20,6 +21,7 @@ import {
   getTotalProducts,
   getMostSoldProducts,
   getRevenueByMonth,
+  getLowStockProducts,
 } from "@/app/_data-access/dashboard/get-dashboard";
 import { RevenueChart } from "./_components/revenue-chart";
 
@@ -32,6 +34,7 @@ export default async function Dashboard() {
     totalProducts,
     mostSoldProducts,
     revenueByMonth,
+    lowStockProducts,
   ] = await Promise.all([
     getTotalRevenue(),
     getTodayRevenue(),
@@ -40,6 +43,7 @@ export default async function Dashboard() {
     getTotalProducts(),
     getMostSoldProducts(),
     getRevenueByMonth(),
+    getLowStockProducts(),
   ]);
 
   const formatCurrency = (value: number) =>
@@ -157,7 +161,7 @@ export default async function Dashboard() {
 
         {/* Lado Direito - Produtos Mais Vendidos */}
         <div className="xl:col-span-1">
-          <Card className="h-full">
+          <Card>
             <CardHeader>
               <div className="flex flex-row items-center gap-2">
                 <CardTitle className="text-lg font-medium">
@@ -199,6 +203,52 @@ export default async function Dashboard() {
                       </div>
                       <span className="text-sm font-semibold pl-2 text-right">
                         {formatCurrency(product.totalRevenue)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Card de Estoque Baixo */}
+          <Card className="mt-2 h-72">
+            <CardHeader>
+              <div className="flex flex-row items-center gap-2">
+                <CardTitle className="text-lg font-medium">
+                  Estoque baixo
+                </CardTitle>
+                <AlertTriangleIcon className="size-5 text-yellow-500" />
+              </div>
+              <CardDescription>
+                Produtos que precisam de reposição
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {lowStockProducts.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  Todos os produtos estão com estoque adequado.
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {lowStockProducts.map((product) => (
+                    <div
+                      key={product.id}
+                      className="flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-yellow-500/15 text-yellow-500 text-sm font-bold">
+                          !
+                        </span>
+                        <p
+                          className="text-sm font-medium leading-none truncate max-w-[120px] lg:max-w-[150px]"
+                          title={product.name}
+                        >
+                          {product.name}
+                        </p>
+                      </div>
+                      <span className="text-sm font-semibold pl-2 text-right">
+                        {product.stock}/{product.minStock} un.
                       </span>
                     </div>
                   ))}
