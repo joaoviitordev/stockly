@@ -6,6 +6,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/app/_components/ui/dropdown-menu";
 import {
@@ -17,6 +18,16 @@ import {
   DialogTitle,
 } from "@/app/_components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/app/_components/ui/alert-dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -26,8 +37,9 @@ import {
 import { Input } from "@/app/_components/ui/input";
 import { Label } from "@/app/_components/ui/label";
 import { Button } from "@/app/_components/ui/button";
-import { MoreHorizontalIcon, PencilIcon, LoaderIcon } from "lucide-react";
+import { MoreHorizontalIcon, PencilIcon, TrashIcon, LoaderIcon } from "lucide-react";
 import { editSale } from "@/app/_actions/sale/edit-sale";
+import { deleteSale } from "@/app/_actions/sale/delete-sale";
 import type { SaleDto } from "./table-columns";
 
 interface ProductOption {
@@ -56,6 +68,10 @@ export default function SaleTableActions({
   const [quantity, setQuantity] = useState<number>(sale.totalQuantity);
   const [isEditing, setIsEditing] = useState(false);
 
+  /* --- Estado do alert dialog de exclusão --- */
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const selectedProduct = products.find((p) => p.id === selectedProductId);
   const unitPrice = selectedProduct?.price ?? 0;
   const totalPrice = unitPrice * quantity;
@@ -65,6 +81,8 @@ export default function SaleTableActions({
     new Intl.NumberFormat("pt-BR", {
       style: "currency",
       currency: "BRL",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 4,
     }).format(value);
 
   /* Abrir dialog de edição e resetar campos com valores atuais */
@@ -97,6 +115,23 @@ export default function SaleTableActions({
     }
   };
 
+  /* Confirmar exclusão */
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteSale(sale.id);
+      setDeleteOpen(false);
+      router.refresh();
+    } catch (error) {
+      console.error("Erro ao excluir venda:", error);
+      alert(
+        error instanceof Error ? error.message : "Erro ao excluir venda."
+      );
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <>
       {/* Dropdown Menu de Ações */}
@@ -116,6 +151,15 @@ export default function SaleTableActions({
           >
             <PencilIcon />
             Editar venda
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            variant="destructive"
+            className="cursor-pointer gap-2"
+            onClick={() => setDeleteOpen(true)}
+          >
+            <TrashIcon />
+            Excluir venda
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -213,6 +257,38 @@ export default function SaleTableActions({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Alert Dialog de Confirmação de Exclusão */}
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <AlertDialogContent size="sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir venda</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir esta venda de{" "}
+              <strong>{sale.productNames}</strong>? O estoque dos produtos será
+              restaurado automaticamente. Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              className="cursor-pointer"
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <LoaderIcon className="animate-spin" />
+                  Excluindo...
+                </>
+              ) : (
+                "Excluir"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

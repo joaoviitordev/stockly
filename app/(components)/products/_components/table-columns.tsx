@@ -22,6 +22,14 @@ export const productTableColumns: ColumnDef<ProductDto>[] = [
   {
     accessorKey: "price",
     header: "Valor unitário",
+    cell: ({ row }) => {
+      return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 4,
+      }).format(row.original.price);
+    },
   },
   {
     accessorKey: "stock",

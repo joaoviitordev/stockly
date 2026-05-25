@@ -226,6 +226,8 @@ export default function ProductTableActions({
                     {new Intl.NumberFormat("pt-BR", {
                       style: "currency",
                       currency: "BRL",
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 4,
                     }).format(editPrice)}
                   </span>
                 </div>
