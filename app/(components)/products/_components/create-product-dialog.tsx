@@ -106,10 +106,14 @@ export default function CreateProductDialog() {
               id="product-price"
               type="number"
               min={0.01}
-              step={0.01}
+              step="any"
               placeholder="0,00"
               value={price || ""}
-              onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
+              onChange={(e) =>
+                setPrice(
+                  parseFloat(e.target.value.replace(",", ".")) || 0
+                )
+              }
             />
           </div>
 

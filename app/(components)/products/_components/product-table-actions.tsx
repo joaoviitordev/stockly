@@ -187,11 +187,13 @@ export default function ProductTableActions({
                 id="edit-product-price"
                 type="number"
                 min={0.01}
-                step={0.01}
+                step="any"
                 placeholder="0,00"
                 value={editPrice || ""}
                 onChange={(e) =>
-                  setEditPrice(parseFloat(e.target.value) || 0)
+                  setEditPrice(
+                    parseFloat(e.target.value.replace(",", ".")) || 0
+                  )
                 }
               />
             </div>
