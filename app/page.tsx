@@ -19,13 +19,13 @@ export default function Home() {
         <Link href="https://github.com/joaoviitordev" target="_blank">
           <FontAwesomeIcon
             icon={faGithub}
-            className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out w-6 h-6 sm:w-8 sm:h-8"
+            className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out text-[24px] sm:text-[32px]"
           />
         </Link>
         <Link href="https://www.linkedin.com/in/joaoviitordev" target="_blank">
           <FontAwesomeIcon
             icon={faLinkedin}
-            className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out w-6 h-6 sm:w-8 sm:h-8"
+            className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out text-[24px] sm:text-[32px]"
           />
         </Link>
       </div>
