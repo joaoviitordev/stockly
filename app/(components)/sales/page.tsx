@@ -24,7 +24,7 @@ export default async function SalesPage() {
         </div>
         <CreateSaleSheet products={productOptions} />
       </div>
-      <SalesDataTable sales={sales} products={productOptions} />
+      <SalesDataTable sales={sales} />
     </div>
   );
 }

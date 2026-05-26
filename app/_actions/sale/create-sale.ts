@@ -3,56 +3,72 @@
 import { db } from "@/app/_lib/prisma";
 import { revalidatePath } from "next/cache";
 
-interface CreateSaleInput {
+interface CartItem {
   productId: string;
   quantity: number;
 }
 
-export const createSale = async (input: CreateSaleInput) => {
-  const product = await db.product.findUnique({
-    where: { id: input.productId },
-  });
+interface CreateSaleInput {
+  items: CartItem[];
+}
 
-  if (!product) {
-    throw new Error("Produto não encontrado.");
+export const createSale = async (input: CreateSaleInput) => {
+  if (input.items.length === 0) {
+    throw new Error("O carrinho está vazio.");
   }
 
-  if (product.stock < input.quantity) {
-    throw new Error("Estoque insuficiente.");
+  // Busca todos os produtos referenciados
+  const productIds = input.items.map((item) => item.productId);
+  const products = await db.product.findMany({
+    where: { id: { in: productIds } },
+  });
+
+  // Valida existência e estoque de cada produto
+  for (const item of input.items) {
+    const product = products.find((p) => p.id === item.productId);
+
+    if (!product) {
+      throw new Error(`Produto não encontrado: ${item.productId}`);
+    }
+
+    if (product.stock < item.quantity) {
+      throw new Error(
+        `Estoque insuficiente para "${product.name}". Disponível: ${product.stock}, solicitado: ${item.quantity}.`
+      );
+    }
   }
 
   await db.$transaction([
+    // Cria a Sale com múltiplos SaleProducts
     db.sale.create({
       data: {
         date: new Date(),
         products: {
-          create: {
-            productId: input.productId,
-            unitPrice: product.price,
-            quantity: input.quantity,
+          create: input.items.map((item) => {
+            const product = products.find((p) => p.id === item.productId)!;
+            return {
+              productId: item.productId,
+              unitPrice: product.price,
+              quantity: item.quantity,
+            };
+          }),
+        },
+      },
+    }),
+    // Decrementa estoque de cada produto
+    ...input.items.map((item) =>
+      db.product.update({
+        where: { id: item.productId },
+        data: {
+          stock: {
+            decrement: item.quantity,
           },
         },
-      },
-    }),
-    db.product.update({
-      where: { id: input.productId },
-      data: {
-        stock: {
-          decrement: input.quantity,
-        },
-      },
-    }),
+      })
+    ),
   ]);
 
   revalidatePath("/sales");
   revalidatePath("/products");
+  revalidatePath("/dashboard");
 };
-
-/* 
- - Server Action com "use server"
- - Valida existência do produto e estoque suficiente
- - Usa db.$transaction para atomicamente:
-    - Criar Sale + SaleProduct
-    - Decrementar estoque do produto
- - Revalida cache das páginas /sales e /products
-*/  

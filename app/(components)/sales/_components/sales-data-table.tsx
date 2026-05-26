@@ -1,24 +1,12 @@
 "use client";
 
 import { DataTable } from "@/app/_components/ui/data-table";
-import { createSalesTableColumns, SaleDto } from "./table-columns";
-
-interface ProductOption {
-  id: string;
-  name: string;
-  price: number;
-  stock: number;
-}
+import { salesTableColumns, SaleDto } from "./table-columns";
 
 interface SalesDataTableProps {
   sales: SaleDto[];
-  products: ProductOption[];
 }
 
-export default function SalesDataTable({
-  sales,
-  products,
-}: SalesDataTableProps) {
-  const columns = createSalesTableColumns(products);
-  return <DataTable columns={columns} data={sales} />;
+export default function SalesDataTable({ sales }: SalesDataTableProps) {
+  return <DataTable columns={salesTableColumns} data={sales} />;
 }

@@ -5,23 +5,13 @@ import SaleTableActions from "./sale-table-actions";
 
 export type SaleDto = {
   id: string;
-  productId: string;
   productNames: string;
   totalQuantity: number;
   totalPrice: number;
   date: Date;
 };
 
-interface ProductOption {
-  id: string;
-  name: string;
-  price: number;
-  stock: number;
-}
-
-export const createSalesTableColumns = (
-  products: ProductOption[]
-): ColumnDef<SaleDto>[] => [
+export const salesTableColumns: ColumnDef<SaleDto>[] = [
   {
     accessorKey: "productNames",
     header: "Produtos",
@@ -57,7 +47,7 @@ export const createSalesTableColumns = (
     id: "actions",
     header: "Ações",
     cell: ({ row }) => {
-      return <SaleTableActions sale={row.original} products={products} />;
+      return <SaleTableActions sale={row.original} />;
     },
   },
 ];
