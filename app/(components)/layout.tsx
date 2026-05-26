@@ -58,7 +58,7 @@ export default function SidebarLayout({
       <Link href="https://github.com/joaoviitordev" target="_blank">
         <FontAwesomeIcon icon={faGithub} className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out" size="2x" />
       </Link>
-      <Link href="https://www.linkedin.com/in/joaoviitordev" target="_blank">
+      <Link href="https://www.linkedin.com/in/joaovitor-faria/" target="_blank">
         <FontAwesomeIcon icon={faLinkedin} className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out" size="2x" />
       </Link>
     </div>

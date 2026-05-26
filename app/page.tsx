@@ -22,7 +22,7 @@ export default function Home() {
             className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out text-[24px] sm:text-[32px]"
           />
         </Link>
-        <Link href="https://www.linkedin.com/in/joaoviitordev" target="_blank">
+        <Link href="https://www.linkedin.com/in/joaovitor-faria/" target="_blank">
           <FontAwesomeIcon
             icon={faLinkedin}
             className="cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out text-[24px] sm:text-[32px]"
