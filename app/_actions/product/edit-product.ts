@@ -3,15 +3,14 @@
 import { db } from "@/app/_lib/prisma";
 import { revalidatePath } from "next/cache";
 
-interface EditProductInput {
-  id: string;
-  name: string;
-  price: number;
-  stock: number;
-  minStock: number;
-}
+import { editProductSchema, type EditProductSchema } from "@/app/_lib/validations/product";
 
-export const editProduct = async (input: EditProductInput) => {
+export const editProduct = async (input: EditProductSchema) => {
+  const parsed = editProductSchema.safeParse(input);
+  if (!parsed.success) {
+    throw new Error(parsed.error.issues[0].message);
+  }
+
   const product = await db.product.findUnique({
     where: { id: input.id },
   });

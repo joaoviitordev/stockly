@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
   DialogContent,
@@ -11,66 +13,53 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/_components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/app/_components/ui/form";
 import { Input } from "@/app/_components/ui/input";
-import { Label } from "@/app/_components/ui/label";
 import { Button } from "@/app/_components/ui/button";
 import { PlusIcon, LoaderIcon } from "lucide-react";
 import { createProduct } from "@/app/_actions/product/create-product";
+import { productSchema, type ProductSchema } from "@/app/_lib/validations/product";
 
 export default function CreateProductDialog() {
-  /* Estado para controlar abertura/fechamento do dialog */
   const [open, setOpen] = useState(false);
-
-  /* Estados dos campos do formulário */
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState<number>(0);
-  const [stock, setStock] = useState<number>(0);
-  const [minStock, setMinStock] = useState<number>(5);
-
-  /* Estado de loading durante o submit */
-  const [isLoading, setIsLoading] = useState(false);
-
   const router = useRouter();
 
-  /* Validação: desabilita o botão se campos obrigatórios estiverem vazios ou inválidos */
-  const isFormValid = name.trim().length > 0 && price > 0 && stock >= 0 && minStock >= 1;
+  const form = useForm<ProductSchema>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: "",
+      price: 0,
+      stock: 0,
+      minStock: 5,
+    },
+  });
 
-  /* Reseta os campos do formulário para o estado inicial */
-  const resetForm = () => {
-    setName("");
-    setPrice(0);
-    setStock(0);
-    setMinStock(5);
-  };
+  const { isSubmitting, isValid, isDirty } = form.formState;
 
-  /* Handler de submit — chama a server action e trata erros */
-  const handleSubmit = async () => {
-    if (!isFormValid) return;
-
-    setIsLoading(true);
+  const handleSubmit = async (data: ProductSchema) => {
     try {
-      await createProduct({
-        name: name.trim(),
-        price,
-        stock,
-        minStock,
-      });
-
-      /* Fecha o dialog e limpa os campos após sucesso */
+      await createProduct(data);
       setOpen(false);
-      resetForm();
+      form.reset();
       router.refresh();
     } catch (error) {
       console.error("Erro ao criar produto:", error);
       alert(error instanceof Error ? error.message : "Erro ao criar produto.");
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      {/* Botão que abre o dialog */}
+    <Dialog open={open} onOpenChange={(val) => {
+      setOpen(val);
+      if (!val) form.reset();
+    }}>
       <DialogTrigger
         render={
           <Button className="cursor-pointer">
@@ -80,7 +69,6 @@ export default function CreateProductDialog() {
         }
       />
       <DialogContent>
-        {/* Cabeçalho com título e descrição */}
         <DialogHeader>
           <DialogTitle>Novo produto</DialogTitle>
           <DialogDescription>
@@ -88,125 +76,102 @@ export default function CreateProductDialog() {
           </DialogDescription>
         </DialogHeader>
 
-        {/* Formulário com os campos do produto */}
-        <div className="flex flex-col gap-4 px-4">
-          {/* Nome do produto */}
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="product-name">Nome</Label>
-            <Input
-              id="product-name"
-              type="text"
-              placeholder="Ex: Camiseta Básica"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-4 px-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nome</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Ex: Camiseta Básica" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          {/* Preço unitário — aceita apenas valores positivos */}
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="product-price">Preço (R$)</Label>
-            <Input
-              id="product-price"
-              type="number"
-              min={0.01}
-              step="any"
-              placeholder="0,00"
-              value={price || ""}
-              onChange={(e) =>
-                setPrice(
-                  parseFloat(e.target.value.replace(",", ".")) || 0
-                )
-              }
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Preço (R$)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      step="any"
+                      placeholder="0,00"
+                      value={field.value || ""}
+                      onChange={(e) => field.onChange(parseFloat(e.target.value.replace(",", ".")) || 0)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          {/* Quantidade em estoque */}
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="product-stock">Estoque</Label>
-            <Input
-              id="product-stock"
-              type="number"
-              min={0}
-              placeholder="0"
-              value={stock || ""}
-              onChange={(e) => setStock(parseInt(e.target.value) || 0)}
+            <FormField
+              control={form.control}
+              name="stock"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Estoque</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="0"
+                      value={field.value === 0 ? "" : field.value}
+                      onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          {/* Estoque mínimo (alerta) */}
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="product-min-stock">Estoque mínimo</Label>
-            <Input
-              id="product-min-stock"
-              type="number"
-              min={1}
-              placeholder="5"
-              value={minStock || ""}
-              onChange={(e) => setMinStock(parseInt(e.target.value) || 1)}
+            <FormField
+              control={form.control}
+              name="minStock"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Estoque mínimo</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="5"
+                      value={field.value === 0 ? "" : field.value}
+                      onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-muted-foreground mt-[-10px]">
               Alerta quando o estoque atingir este valor
             </span>
-          </div>
 
-          {/* Resumo do produto — aparece somente quando o formulário é válido */}
-          {isFormValid && (
-            <div className="rounded-lg border p-3 space-y-1">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Produto</span>
-                <span>{name}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Preço</span>
-                <span>
-                  {new Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 4,
-                  }).format(price)}
-                </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Estoque</span>
-                <span>{stock} un.</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Estoque mínimo</span>
-                <span>{minStock} un.</span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Footer com botão de confirmação e estado de loading */}
-        <DialogFooter>
-          <Button
-            className="w-full cursor-pointer"
-            onClick={handleSubmit}
-            disabled={!isFormValid || isLoading}
-          >
-            {isLoading ? (
-              <>
-                <LoaderIcon className="animate-spin" />
-                Criando...
-              </>
-            ) : (
-              "Criar produto"
-            )}
-          </Button>
-        </DialogFooter>
+            <DialogFooter className="mt-4">
+              <Button
+                type="submit"
+                className="w-full cursor-pointer"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <LoaderIcon className="animate-spin mr-2 size-4" />
+                    Criando...
+                  </>
+                ) : (
+                  "Criar produto"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
 }
-
-/*
-  - Componente client-side com Dialog (modal centralizado)
-  - Inputs para nome, preço e estoque do produto
-  - Resumo dinâmico exibido quando o formulário está válido
-  - Validação de campos obrigatórios (nome não vazio, preço > 0)
-  - Chama a server action createProduct no submit
-  - Loading state no botão de submit
-  - Reset automático dos campos após criação bem-sucedida
-*/

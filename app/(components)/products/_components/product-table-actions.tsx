@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,9 +29,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/app/_components/ui/alert-dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/app/_components/ui/form";
 import { Button } from "@/app/_components/ui/button";
 import { Input } from "@/app/_components/ui/input";
-import { Label } from "@/app/_components/ui/label";
 import {
   MoreHorizontalIcon,
   CopyIcon,
@@ -39,6 +48,7 @@ import {
 } from "lucide-react";
 import { deleteProduct } from "@/app/_actions/product/delete-product";
 import { editProduct } from "@/app/_actions/product/edit-product";
+import { editProductSchema, type EditProductSchema } from "@/app/_lib/validations/product";
 import type { ProductDto } from "./table-columns";
 
 interface ProductTableActionsProps {
@@ -50,48 +60,41 @@ export default function ProductTableActions({
 }: ProductTableActionsProps) {
   const router = useRouter();
 
-  /* --- Estado do dialog de edição --- */
   const [editOpen, setEditOpen] = useState(false);
-  const [editName, setEditName] = useState(product.name);
-  const [editPrice, setEditPrice] = useState(product.price);
-  const [editStock, setEditStock] = useState(product.stock);
-  const [editMinStock, setEditMinStock] = useState(product.minStock);
-  const [isEditing, setIsEditing] = useState(false);
-
-  /* --- Estado do alert dialog de exclusão --- */
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const isEditFormValid =
-    editName.trim().length > 0 && editPrice > 0 && editStock >= 0 && editMinStock >= 1;
+  const form = useForm<EditProductSchema>({
+    resolver: zodResolver(editProductSchema),
+    defaultValues: {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      stock: product.stock,
+      minStock: product.minStock,
+    },
+  });
 
-  /* Copiar ID do produto para a área de transferência */
+  const { isSubmitting } = form.formState;
+
   const handleCopyId = async () => {
     await navigator.clipboard.writeText(product.id);
   };
 
-  /* Abrir dialog de edição e resetar campos com valores atuais */
   const handleOpenEdit = () => {
-    setEditName(product.name);
-    setEditPrice(product.price);
-    setEditStock(product.stock);
-    setEditMinStock(product.minStock);
+    form.reset({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      stock: product.stock,
+      minStock: product.minStock,
+    });
     setEditOpen(true);
   };
 
-  /* Confirmar edição */
-  const handleEdit = async () => {
-    if (!isEditFormValid) return;
-
-    setIsEditing(true);
+  const handleEdit = async (data: EditProductSchema) => {
     try {
-      await editProduct({
-        id: product.id,
-        name: editName.trim(),
-        price: editPrice,
-        stock: editStock,
-        minStock: editMinStock,
-      });
+      await editProduct(data);
       setEditOpen(false);
       router.refresh();
     } catch (error) {
@@ -99,12 +102,9 @@ export default function ProductTableActions({
       alert(
         error instanceof Error ? error.message : "Erro ao editar produto."
       );
-    } finally {
-      setIsEditing(false);
     }
   };
 
-  /* Confirmar exclusão */
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
@@ -123,7 +123,6 @@ export default function ProductTableActions({
 
   return (
     <>
-      {/* Dropdown Menu de Ações */}
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
@@ -160,7 +159,6 @@ export default function ProductTableActions({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Dialog de Edição */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
           <DialogHeader>
@@ -170,120 +168,104 @@ export default function ProductTableActions({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex flex-col gap-4 px-4">
-            {/* Nome */}
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="edit-product-name">Nome</Label>
-              <Input
-                id="edit-product-name"
-                type="text"
-                placeholder="Ex: Camiseta Básica"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleEdit)} className="flex flex-col gap-4 px-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ex: Camiseta Básica" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            {/* Preço */}
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="edit-product-price">Preço (R$)</Label>
-              <Input
-                id="edit-product-price"
-                type="number"
-                min={0.01}
-                step="any"
-                placeholder="0,00"
-                value={editPrice || ""}
-                onChange={(e) =>
-                  setEditPrice(
-                    parseFloat(e.target.value.replace(",", ".")) || 0
-                  )
-                }
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Preço (R$)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="any"
+                        placeholder="0,00"
+                        value={field.value || ""}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value.replace(",", ".")) || 0)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            {/* Estoque */}
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="edit-product-stock">Estoque</Label>
-              <Input
-                id="edit-product-stock"
-                type="number"
-                min={0}
-                placeholder="0"
-                value={editStock || ""}
-                onChange={(e) =>
-                  setEditStock(parseInt(e.target.value) || 0)
-                }
+              <FormField
+                control={form.control}
+                name="stock"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Estoque</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="0"
+                        value={field.value === 0 ? "" : field.value}
+                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            {/* Estoque mínimo */}
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="edit-product-min-stock">Estoque mínimo</Label>
-              <Input
-                id="edit-product-min-stock"
-                type="number"
-                min={1}
-                placeholder="5"
-                value={editMinStock || ""}
-                onChange={(e) =>
-                  setEditMinStock(parseInt(e.target.value) || 1)
-                }
+              <FormField
+                control={form.control}
+                name="minStock"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Estoque mínimo</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="5"
+                        value={field.value === 0 ? "" : field.value}
+                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-muted-foreground mt-[-10px]">
                 Alerta quando o estoque atingir este valor
               </span>
-            </div>
 
-            {/* Resumo das alterações */}
-            {isEditFormValid && (
-              <div className="rounded-lg border p-3 space-y-1">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Produto</span>
-                  <span>{editName}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Preço</span>
-                  <span>
-                    {new Intl.NumberFormat("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 4,
-                    }).format(editPrice)}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Estoque</span>
-                  <span>{editStock} un.</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Estoque mínimo</span>
-                  <span>{editMinStock} un.</span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <DialogFooter>
-            <Button
-              className="w-full cursor-pointer"
-              onClick={handleEdit}
-              disabled={!isEditFormValid || isEditing}
-            >
-              {isEditing ? (
-                <>
-                  <LoaderIcon className="animate-spin" />
-                  Salvando...
-                </>
-              ) : (
-                "Salvar alterações"
-              )}
-            </Button>
-          </DialogFooter>
+              <DialogFooter className="mt-4">
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <LoaderIcon className="animate-spin mr-2 size-4" />
+                      Salvando...
+                    </>
+                  ) : (
+                    "Salvar alterações"
+                  )}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
 
-      {/* Alert Dialog de Confirmação de Exclusão */}
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogContent size="sm">
           <AlertDialogHeader>
@@ -304,7 +286,7 @@ export default function ProductTableActions({
             >
               {isDeleting ? (
                 <>
-                  <LoaderIcon className="animate-spin" />
+                  <LoaderIcon className="animate-spin mr-2 size-4" />
                   Excluindo...
                 </>
               ) : (

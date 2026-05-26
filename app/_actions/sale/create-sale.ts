@@ -3,16 +3,14 @@
 import { db } from "@/app/_lib/prisma";
 import { revalidatePath } from "next/cache";
 
-interface CartItem {
-  productId: string;
-  quantity: number;
-}
+import { saleSchema, type SaleSchema } from "@/app/_lib/validations/sale";
 
-interface CreateSaleInput {
-  items: CartItem[];
-}
+export const createSale = async (input: SaleSchema) => {
+  const parsed = saleSchema.safeParse(input);
+  if (!parsed.success) {
+    throw new Error(parsed.error.issues[0].message);
+  }
 
-export const createSale = async (input: CreateSaleInput) => {
   if (input.items.length === 0) {
     throw new Error("O carrinho está vazio.");
   }
