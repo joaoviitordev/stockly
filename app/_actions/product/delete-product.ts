@@ -2,11 +2,14 @@
 
 import { db } from "@/app/_lib/prisma";
 import { revalidatePath } from "next/cache";
+import { verifySession } from "@/app/_lib/session";
 
 export const deleteProduct = async (id: string) => {
-  // Verifica se o produto existe
-  const product = await db.product.findUnique({
-    where: { id },
+  const { userId } = await verifySession();
+
+  // Verifica se o produto existe e pertence ao usuário
+  const product = await db.product.findFirst({
+    where: { id, userId },
   });
 
   if (!product) {

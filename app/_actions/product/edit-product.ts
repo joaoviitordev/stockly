@@ -2,17 +2,20 @@
 
 import { db } from "@/app/_lib/prisma";
 import { revalidatePath } from "next/cache";
+import { verifySession } from "@/app/_lib/session";
 
 import { editProductSchema, type EditProductSchema } from "@/app/_lib/validations/product";
 
 export const editProduct = async (input: EditProductSchema) => {
+  const { userId } = await verifySession();
+
   const parsed = editProductSchema.safeParse(input);
   if (!parsed.success) {
     throw new Error(parsed.error.issues[0].message);
   }
 
-  const product = await db.product.findUnique({
-    where: { id: input.id },
+  const product = await db.product.findFirst({
+    where: { id: input.id, userId },
   });
 
   if (!product) {
@@ -24,6 +27,7 @@ export const editProduct = async (input: EditProductSchema) => {
     const nameExists = await db.product.findFirst({
       where: {
         name: input.name,
+        userId,
         NOT: { id: input.id },
       },
     });

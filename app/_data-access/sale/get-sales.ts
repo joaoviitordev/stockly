@@ -1,4 +1,5 @@
 import { db } from "@/app/_lib/prisma";
+import { verifySession } from "@/app/_lib/session";
 
 export interface SaleDtoFromDb {
   id: string;
@@ -37,7 +38,10 @@ interface SaleRecord {
 }
 
 export const getSales = async (): Promise<SaleDtoFromDb[]> => {
+  const { userId } = await verifySession();
+
   const sales: SaleRecord[] = await db.sale.findMany({
+    where: { userId },
     include: {
       products: {
         include: {

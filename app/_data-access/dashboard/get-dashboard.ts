@@ -1,4 +1,5 @@
 import { db } from "@/app/_lib/prisma";
+import { verifySession } from "@/app/_lib/session";
 
 interface SaleProductRecord {
   id: string;
@@ -32,14 +33,24 @@ interface SaleProductWithProduct extends SaleProductRecord {
 }
 
 export const getTotalRevenue = async (): Promise<number> => {
-  const saleProducts: SaleProductRecord[] = await db.saleProduct.findMany();
-  return saleProducts.reduce(
-    (sum: number, sp: SaleProductRecord) => sum + Number(sp.unitPrice) * sp.quantity,
+  const { userId } = await verifySession();
+  const sales = await db.sale.findMany({
+    where: { userId },
+    include: { products: true },
+  });
+  return sales.reduce(
+    (sum: number, sale: SaleWithProducts) =>
+      sum +
+      sale.products.reduce(
+        (s: number, sp: SaleProductRecord) => s + Number(sp.unitPrice) * sp.quantity,
+        0
+      ),
     0
   );
 };
 
 export const getTodayRevenue = async (): Promise<number> => {
+  const { userId } = await verifySession();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -48,6 +59,7 @@ export const getTodayRevenue = async (): Promise<number> => {
 
   const sales: SaleWithProducts[] = await db.sale.findMany({
     where: {
+      userId,
       date: {
         gte: today,
         lt: tomorrow,
@@ -70,18 +82,22 @@ export const getTodayRevenue = async (): Promise<number> => {
 };
 
 export const getTotalSales = async (): Promise<number> => {
-  return db.sale.count();
+  const { userId } = await verifySession();
+  return db.sale.count({ where: { userId } });
 };
 
 export const getTotalStock = async (): Promise<number> => {
+  const { userId } = await verifySession();
   const result = await db.product.aggregate({
+    where: { userId },
     _sum: { stock: true },
   });
   return result._sum.stock ?? 0;
 };
 
 export const getTotalProducts = async (): Promise<number> => {
-  return db.product.count();
+  const { userId } = await verifySession();
+  return db.product.count({ where: { userId } });
 };
 
 export interface MostSoldProductDto {
@@ -92,11 +108,20 @@ export interface MostSoldProductDto {
 }
 
 export const getMostSoldProducts = async (): Promise<MostSoldProductDto[]> => {
-  const saleProducts: SaleProductWithProduct[] = await db.saleProduct.findMany({
+  const { userId } = await verifySession();
+  const sales = await db.sale.findMany({
+    where: { userId },
     include: {
-      product: true,
+      products: {
+        include: { product: true },
+      },
     },
   });
+
+  // Flatten all sale products
+  const saleProducts: SaleProductWithProduct[] = sales.flatMap(
+    (sale) => sale.products as unknown as SaleProductWithProduct[]
+  );
 
   // Agrupa por productId
   const grouped = saleProducts.reduce(
@@ -128,11 +153,13 @@ export interface MonthlyRevenueDto {
 }
 
 export const getRevenueByMonth = async (): Promise<MonthlyRevenueDto[]> => {
+  const { userId } = await verifySession();
   const now = new Date();
   const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
 
   const sales: SaleWithProducts[] = await db.sale.findMany({
     where: {
+      userId,
       date: {
         gte: sixMonthsAgo,
       },
@@ -185,8 +212,10 @@ export interface LowStockProductDto {
 }
 
 export const getLowStockProducts = async (): Promise<LowStockProductDto[]> => {
+  const { userId } = await verifySession();
   const products = await db.product.findMany({
     where: {
+      userId,
       stock: { gt: 0 },
     },
     select: {

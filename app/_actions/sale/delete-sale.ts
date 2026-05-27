@@ -2,11 +2,14 @@
 
 import { db } from "@/app/_lib/prisma";
 import { revalidatePath } from "next/cache";
+import { verifySession } from "@/app/_lib/session";
 
 export const deleteSale = async (saleId: string) => {
-  // Busca a venda com seus produtos vinculados
-  const sale = await db.sale.findUnique({
-    where: { id: saleId },
+  const { userId } = await verifySession();
+
+  // Busca a venda com seus produtos vinculados (filtrando pelo usuário)
+  const sale = await db.sale.findFirst({
+    where: { id: saleId, userId },
     include: { products: true },
   });
 

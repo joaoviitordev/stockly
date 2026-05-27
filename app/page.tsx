@@ -10,7 +10,7 @@ export default function Home() {
       <p className="text-muted-foreground w-full max-w-sm sm:max-w-md px-4 text-center font-semibold">
         Gerencie suas vendas, produtos e estoques de forma simples e eficiente.
       </p>
-      <Link href="/dashboard">
+      <Link href="/login">
         <Button className="w-30 h-10 text-md rounded-2xl hover:bg-muted hover:border-2 hover:border-foreground hover:text-foreground cursor-pointer transition-all">
           Começar
         </Button>

@@ -1,4 +1,5 @@
 import { db } from "@/app/_lib/prisma";
+import { verifySession } from "@/app/_lib/session";
 
 export interface ProductRecord {
   id: string;
@@ -11,5 +12,8 @@ export interface ProductRecord {
 }
 
 export const getProducts = async (): Promise<ProductRecord[]> => {
-  return db.product.findMany();
+  const { userId } = await verifySession();
+  return db.product.findMany({
+    where: { userId },
+  });
 };

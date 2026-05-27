@@ -54,6 +54,7 @@ export function CreateSaleSheet({ products }: CreateSaleSheetProps) {
   const [selectedProductId, setSelectedProductId] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
 
   const router = useRouter();
 
@@ -120,6 +121,7 @@ export function CreateSaleSheet({ products }: CreateSaleSheetProps) {
 
     setSelectedProductId("");
     setQuantity(1);
+    setResetKey((prev) => prev + 1);
   };
 
   /* Remover item do carrinho */
@@ -146,6 +148,7 @@ export function CreateSaleSheet({ products }: CreateSaleSheetProps) {
     setCart([]);
     setSelectedProductId("");
     setQuantity(1);
+    setResetKey((prev) => prev + 1);
   };
 
   /* Confirmar venda */
@@ -195,27 +198,35 @@ export function CreateSaleSheet({ products }: CreateSaleSheetProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-4 px-4">
+        <div className="flex flex-col gap-4 overflow-y-auto max-h-[60vh] pr-2 -mr-2">
           {/* ═══ Seção de adição ═══ */}
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-2">
               <Label htmlFor="product-select">Produto</Label>
               <Select
-                value={selectedProductId}
+                key={resetKey}
+                value={selectedProductId === "" ? null : selectedProductId}
                 onValueChange={(value) => {
                   setSelectedProductId(value as string);
                   setQuantity(1);
                 }}
+                disabled={availableProducts.length === 0}
               >
                 <SelectTrigger id="product-select" className="w-full">
-                  <SelectValue placeholder="Selecione um produto" />
+                  <SelectValue placeholder={availableProducts.length === 0 ? "Sem produtos com estoque" : "Selecione um produto"} />
                 </SelectTrigger>
                 <SelectContent>
-                  {availableProducts.map((product) => (
-                    <SelectItem key={product.id} value={product.id}>
-                      {product.name}
+                  {availableProducts.length === 0 ? (
+                    <SelectItem value="empty" disabled>
+                      Nenhum produto disponível
                     </SelectItem>
-                  ))}
+                  ) : (
+                    availableProducts.map((product) => (
+                      <SelectItem key={product.id} value={product.id}>
+                        {product.name}
+                      </SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
             </div>
