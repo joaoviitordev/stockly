@@ -39,7 +39,7 @@ Além disso, o projeto conta com uma **Landing Page** simples para:
 
 ## Tecnologias utilizadas
 
-### 🎨 Frontend
+### Frontend
 - Next.js (App Router)
 - React
 - TypeScript
