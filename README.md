@@ -1,12 +1,15 @@
-# 📊 Stockly
+# Stockly
 
 <p align="center">
-  <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow" />
   <img src="https://img.shields.io/badge/foco-estudo-blue" />
   <img src="https://img.shields.io/badge/feito%20com-Next.js-black" />
   <img src="https://img.shields.io/badge/database-Neon%20DB-00e599" />
   <img src="https://img.shields.io/badge/ORM-Prisma-blueviolet" />
   <img src="https://img.shields.io/badge/design-Figma-F24E1E" />
+</p>
+
+<p align="center">
+  <img src="public/img/stockly.png" alt="Dashboard do Stockly" width="100%" />
 </p>
 
 Aplicação web desenvolvida com o objetivo de gerenciar o **controle de estoque e vendas de produtos**, permitindo registrar produtos, gerenciar níveis de estoque e acompanhar o histórico de transações de forma simples e intuitiva.
@@ -15,13 +18,13 @@ Aplicação web desenvolvida com o objetivo de gerenciar o **controle de estoque
 
 ---
 
-## 🔗 Link do projeto
+## Link do projeto
 
 - **Deploy da aplicação:** [Stockly no Vercel](https://stockly-seven-nu.vercel.app/)
 
 ---
 
-## 🚀 Sobre o projeto
+## Sobre o projeto
 
 O **Stockly** é uma aplicação focada no controle interno de estoque e vendas, permitindo:
 
@@ -37,9 +40,9 @@ Além disso, o projeto conta com uma **Landing Page** simples para:
 
 ---
 
-## 🛠️ Tecnologias utilizadas
+## Tecnologias utilizadas
 
-### 🎨 Frontend
+### Frontend
 - Next.js (App Router)
 - React
 - TypeScript
@@ -48,25 +51,25 @@ Além disso, o projeto conta com uma **Landing Page** simples para:
 - Radix UI / Shadcn UI (componentes de interface acessíveis)
 - FontAwesome (ícones da interface)
 
-### ⚙️ Backend
+### Backend
 - Node.js
 - Server Actions (Next.js) para manipulação de banco de dados diretamente no servidor
 
-### 🗄️ Banco de dados
+### Banco de dados
 - PostgreSQL (hospedado na nuvem via **Neon DB**)
 - **Prisma ORM**
 
-### 🎨 Design & Protótipo
+### Design & Protótipo
 - **Figma** (concepção e UI design do projeto)
 
-### 🧩 Outros
+### Outros
 - Git & GitHub
 - Arquitetura de componentes modularizada
 - Integração full stack
 
 ---
 
-## 🧠 Contexto de aprendizado
+## Contexto de aprendizado
 
 Este projeto foi construído como parte de um processo intensivo de estudos de desenvolvimento web moderno.
 
@@ -78,7 +81,7 @@ Este projeto foi construído como parte de um processo intensivo de estudos de d
 
 ---
 
-## 📚 Principais aprendizados
+## Principais aprendizados
 
 - Estruturação de projetos modernos com Next.js App Router.
 - Integração e modelagem de banco de dados relacionais com Prisma.
@@ -88,7 +91,7 @@ Este projeto foi construído como parte de um processo intensivo de estudos de d
 
 ---
 
-## 📌 Considerações finais
+## Considerações finais
 
 Esse projeto representa um passo importante na minha trajetória de aprendizado full stack.
 
@@ -100,7 +103,7 @@ Mesmo sendo uma aplicação com foco em estudos, foi fundamental para:
 
 ---
 
-## 📬 Contato
+## Contato
 
 Caso queira conversar, dar feedback ou oportunidades:
 
