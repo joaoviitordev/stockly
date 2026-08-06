@@ -1,7 +1,6 @@
 # Stockly
 
 <p align="center">
-  <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow" />
   <img src="https://img.shields.io/badge/foco-estudo-blue" />
   <img src="https://img.shields.io/badge/feito%20com-Next.js-black" />
   <img src="https://img.shields.io/badge/database-Neon%20DB-00e599" />
